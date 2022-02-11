@@ -1,0 +1,19 @@
+0.2.0
+	'..tables' now returns an empty vector when there is no table in environment
+	consequently all '!is.null' on input$main.data have to be replaced by '..isNotEmpty'.
+	Added a parameter to remove the creation of example tables.
+	BUGS:
+	*	contents	displays only the 1st class
+		view		1st dropdownbutton when no table: invalid 1st argument
+		browse		1st dropdownbutton when no table, selecting columns by name: invalid 1st argument
+		tabular		after deleting table: invalid 1st argument
+		distinct	when no table: message from ..try
+		edit		button 'validate' doesn't change of state
+		graphics,	making a graphic (e.g. pie) then deleting used table leaves:
+		tabular				<text>:1:2: SPECIAL inattendu(e)
+						1:  %>%
+	***	gather		transposing all variables of 'enquête' crashed IGoR (once)
+ 
+	TODO:
+		mutate2		use the same table of functions as in 'mutate'
+	
