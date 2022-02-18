@@ -19,7 +19,7 @@ page_spread <- list(
 
   server = function(input, output, session) {
 
-    ..aaServer(input,output,"spread")
+    ..aServer(input,output,"spread")
 
     output$spread.wide <- renderImage(list(src=..image("wide.png")),deleteFile = FALSE)
 
@@ -67,6 +67,13 @@ page_spread <- list(
               if (..isTRUE(input$spread.sep)) ", sep=\"\"",
               ")"
     ) )     )
+    
+    # We must try the command on the whole rows as duplicated keys would crash
+    # and this cannot detected by the default behaviour of testing only the 1st row
+    observeEvent({input$spread.command2; .IGoR$state$meta},
+      ..try(input,output,"spread", 
+            .subset=glue("select({..name(input$spread.K)},{..name(input$spread.V)})")
+    ) )
 
   }
 )

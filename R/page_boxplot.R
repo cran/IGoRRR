@@ -37,9 +37,9 @@ page_boxplot <- list(
         checkboxInput("boxplot.coordflip",..s4(.IGoR$Z$boxplot$coordflip), FALSE)
     ) )
 
-    ..gVarLabel.ui(input,output,"boxplot","Y")
+    ..output.gVarLabel(input,output,"boxplot","Y")
 
-    ..gVarLabel.ui(input,output,"boxplot","X")
+    ..output.gVarLabel(input,output,"boxplot","X")
 
     output$boxplot.command2 <- renderUI(
       ..textarea("boxplot", "gf_boxplot(y~x)", 3,

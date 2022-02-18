@@ -18,8 +18,8 @@ page_gather <- list(
         ..load.ui("gather"),
         box(width='100%',
           fluidRow(
-            column(width=6, textInput("gather.out.K", ..s2(.IGoR$Z$gather$out.k), "")),
-            column(width=6, textInput("gather.out.V", ..s2(.IGoR$Z$gather$out.v), ""))
+            column(width=6, textInput("gather.out.K", ..s1(.IGoR$Z$gather$out.k), "")),
+            column(width=6, textInput("gather.out.V", ..s1(.IGoR$Z$gather$out.v), ""))
           )
   ) ) ) ),
 
@@ -41,8 +41,8 @@ page_gather <- list(
                     drop=FALSE)
     })
 
-    ..select.what(input,output,"gather", columns.all=TRUE)
-    ..select.drop(input,output,"gather")
+    ..output.select.what(input,output,"gather", columns.all=TRUE)
+    ..output.select.drop(input,output,"gather")
 
     output$gather.command2 <- renderUI(
       ..textarea("gather", "gather(k,v,columns)", 2,
@@ -53,9 +53,15 @@ page_gather <- list(
           if (..isTRUE(input$gather.pivot))
             ..command2(
               "pivot_longer(",
-              if (input$gather.type==2)
-                   paste0("is.",input$gather.class) %>% {if (..isTRUE(input$gather.drop)) paste0("Negate(",.,")") else .}
-              else ..select(input,"gather") %>% {if (..isNotEmpty(.)) paste0("c(",..collapse0(.),")") else "everything()"},
+              if (input$gather.type==2) {
+                a <- paste0("is.",input$gather.class)
+                if (..isTRUE(input$gather.drop)) a <- glue("Negate({a})")
+                glue("where({a})")
+              }
+              else {
+                a <- ..select(input,"gather")
+                if (..isNotEmpty(a)) glue("c({..collapse0(a)})") else "everything()"
+              },
               ", names_to=", shQuote(input$gather.out.K),
               ", values_to=", shQuote(input$gather.out.V),
               ")"

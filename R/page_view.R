@@ -114,9 +114,9 @@ page_view <- list(
       .IGoR$state$meta
       if (..isNotEmpty(input$main.data)) {
         df <- df()
-        n <- if (length(input$view.rownames)>0) length(input$view.rownames)
-        else if((df$groups==0)||(length(input$view.group.no)==0)) nrow(df$data)
-        else df$groups_size[input$view.group.no]
+        n <- if (!is.null(input$view.rownames)) length(input$view.rownames)
+        else if((df$groups==0)||is.null(input$view.group.no)) nrow(df$data)
+        else df$groups_size[[input$view.group.no]]
         m <- trunc((n-1)/input$view.page.size)+1
         sliderInput(..do.sync(input,"view.page.no"),..s2(.IGoR$Z$view$page.no),1,m,1,step=1, round=TRUE, sep="")
       }

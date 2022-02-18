@@ -2,7 +2,6 @@
 ### View the columns of the current table
 ###   Dependencies on specific packages: none.
 ###   No generated code.
-###   BUG: Only the first class is displayed
 
 page_contents <- list(
 
@@ -22,7 +21,7 @@ page_contents <- list(
         f <- Vectorize(function(nom) attr(df[[nom]],"label") %>% ifelse(is.null(.),NA,.))
         dt <- data.frame(seq_along(df),
                          colnames(df),
-                         unlist(Map(function (x) class(x)[1],df), use.names=FALSE),
+                         unlist(Map(function (x) toString(class(x)), df), use.names=FALSE),
                          f(colnames(df)))
         names(dt) <- .IGoR$Z$contents$columns
         dt[order(dt[[input$contents.sort]]),]

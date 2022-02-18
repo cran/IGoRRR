@@ -62,9 +62,9 @@ page_points <- list(
         ) )
     })
 
-    ..gVarLabel.ui(input,output,"points","X")
+    ..output.gVarLabel(input,output,"points","X")
 
-    ..gVarLabel.ui(input,output,"points","Y")
+    ..output.gVarLabel(input,output,"points","Y")
 
     output$points.scale <- renderUI({
       .IGoR$state$meta

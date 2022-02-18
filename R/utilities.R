@@ -41,6 +41,7 @@ wtd.percent <- function (x, weights, na.rm=TRUE) 100*sum(x, na.rm)/sum(weights)
 ..collapse3 <- function(x)
   if (length(x)==0) "c()" else if (length(x)==1) paste0('"',x,'"') else paste0("c(",..collapse1(x),")")
 
+..isCondition <- function(x) "condition" %in% class(x)
 
 ..isTRUE     <- function (x) (length(x)>0)&&x
 ..isFALSE    <- function (x) (length(x)>0)&&!x

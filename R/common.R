@@ -37,9 +37,9 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   })
   
   l <- ls(envir=.IGoR$env)
-  l <- Filter(function(x) is.data.frame(get(x,envir=.IGoR$env)), l)
-  if (length(l)==0) character(0)  # ''t' returns a list not a vector in that case!
-  else unlist(l)[order(t(l))]
+  l <- unlist(Filter(function(x) is.data.frame(get(x,envir=.IGoR$env)), l))
+  if (length(l)==0) l  # t' returns a list not a vector in that case!
+  else l[order(t(l))]
 }
 
 
@@ -55,23 +55,21 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 } )
 
 ## Update the list of know tables
+## New tables are allways put at the end of list
 ..newTable <- function(input,output,
                        .table,
                        .select=FALSE) {
-  a <- if (.table %in% .IGoR$tables) 
-         "updated"
-       else {
-         .IGoR$tables <- ..tables()
-         .IGoR$state$list <- Sys.time()
-         output$main.data <-  renderUI(
-           selectizeInput("main.data", label = .IGoR$Z$all$main.data,
-                          selected=if (.select) .table else input$main.data,
-                          choices = .IGoR$tables
-         )               )
-        "created"
-       }
+  a <- if (.table %in% .IGoR$tables) "updated" else "created"
   eval(parse(text=glue("attr({.table},'{a}')<- Sys.time()")),envir=.IGoR$env)
-}
+  if (a=="created") {
+    .IGoR$tables <- ..tables()
+    .IGoR$state$list <- Sys.time()
+    output$main.data <- renderUI(
+      selectizeInput("main.data", .IGoR$Z$all$main.data,
+                     selected=if (.select) .table else input$main.data,
+                     choices = .IGoR$tables
+      )             )
+} }
 
 ## Get the list of columns matching a given type from the current table
 ..columns <- function (.table,.class,.sort=TRUE) {
@@ -110,11 +108,11 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 # Syntax tools ------------------------------------------------------------
 
 ..look <- function(text) {
-  v <- tryCatch({ z <- getParseData(parse(text=text, keep.source=TRUE))
+  x <- tryCatch({ z <- getParseData(parse(text=text, keep.source=TRUE))
                   z[z$token %in% c("OR2","AND2","EQ_ASSIGN"),"text"]
                 },
                 error=identity)
-  if ((length(v)>0)&&!is(v,"condition")) sprintf(.IGoR$Z$all$msg.warning,..collapse(v)) else ""
+  if ((length(x)>0)&&!..isCondition(x)) sprintf(.IGoR$Z$all$msg.warning,..collapse(x)) else ""
 }
 
 ## Widgets within dropdownButtons are not refreshed until they are shown,
@@ -167,7 +165,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 
   ..aServer(input,output,page)
 
-  ..select.what(input,output,page)
+  ..output.select.what(input,output,page)
 }
 
 ## Minimal server for pages that don't create a table
@@ -237,14 +235,12 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   ) )
 
   ..saveButton(input,output,page)
-
 }
 
-..saveButton <- function(input,output,page) {
-
-  shinyFileSave(input,paste0(page,"SaveButton"), roots=.IGoR$config$volumes)
-
-}
+## (graphics, 'tabular') button to select where to save results
+## actual selected file is used in ..gSaveCmd
+..saveButton <- function(input,output,page) 
+  shinyFileSave(input, paste0(page,"SaveButton"), roots=.IGoR$config$volumes, defaultPath='', defaultRoot='home')
 
 ## (graphics, 'tabular') Widget to allow saving results
 ..save.ui <- function (page, .title=.IGoR$Z$all$graphics.save)
@@ -253,18 +249,19 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
       column(width=6, uiOutput(paste0(page,".save")))
   )
 
-..gVarLabel.ui <- function(input,output,page,var)
+## (graphics) Add a widget displaying the label attribute of a column or its name
+..output.gVarLabel <- function(input,output,page,var)
   output[[paste0(page,".",var,".label")]] <- renderUI({
     v <- input[[paste0(page,".",var)]]
     if (..isNotEmpty(v))
-      textInput(paste0(page,".",var,".label"),..s2("Titre"),{
+      textInput(paste0(page,".",var,".label"),..s2(.IGoR$Z$any$title),{
         d <- ..data(input)
         l <- attr(d[[v]],'label')
         if (is.null(l)) v else l
       })
 })
 
-## textInput widget with default text column label if some exists or column name if not
+## (graphics) textInput widget with default text column label if some exists or column name if not
 ..gLabel.ui <- function(input,page,var) {
   v <- input[[paste0(page,".",var)]]
   d <- ..data(input)
@@ -272,14 +269,15 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   textInput(paste0(page,".",var,".label"),.IGoR$Z$any$title,if (is.null(l)) v else l)
 }
 
-## Builds the additional arg to set a title from a column name or label or user text
+## command2 tool: Builds the additional arg to set a title from a column name or label or user text
+## returns NULL if no customized label is required
 ..gLabel.arg <- function(input,page,
                              var,
                              name)
   if (..isNE(input[[paste0(page,'.',var,'.label')]],input[[paste0(page,'.',var)]]))
     paste0('\n     ',name,'=',shQuote(input[[paste0(page,'.',var,'.label')]]))
 
-## Generate the call to 'gf_labs'
+## command2 tool: Generate the call to 'gf_labs'
 ..gTitleCmd <- function(input,page,labels=NULL,X=FALSE,Y=FALSE) {
   i <- function(item) input[[paste0(page,".",item)]]
 
@@ -292,7 +290,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   if (length(l)>0) paste0(NL,glue("gf_labs({paste(l,collapse=', ')})"))
 }
 
-## Generate the call to 'ggsave'
+## command2 tool: Generate the call to 'ggsave' from the checkbox and the selected file
 ..gSaveCmd <- function(input,page)
   if (..isTRUE(input[[paste0(page,".save")]])) {
     f <- parseSavePath(.IGoR$config$volumes,input[[paste0(page,"SaveButton")]])$datapath
@@ -306,28 +304,27 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 ..try <- function (input,output,page
                    ,.fn=NULL,            # Additional function to apply to a valid result
                    .subset="head(1)") {  # The part of table to use for testing code
+  
   output[[paste0(page,".preview")]] <- renderText("")
+  
   output[[paste0(page,".comment")]] <- renderText({
-    b <- paste0(page,".load")
+    ok <- FALSE
     s <- input[[paste0(page,".command2")]]
-    if (..isNotEmpty(input$main.data)&&(nchar(s)>0)&&(s!='   ')) {
+    m <- if (..isNotEmpty(input$main.data)&&..isNotEmpty(s)&&(s!='   ')) {
       x <- tryCatch(
         eval(parse(text=glue("{input$main.data} %>% {.subset} %>%\n{s}")), envir=.IGoR$env),
-        error=function(e) e)
-      if (is.data.frame(x)) {
-        output[[b]] <- renderUI(actionButton(b,..buttonName(input,page)))
-        shinyjs::enable(b)
-        shinyjs::show(b)
+        error=identity)
+      if (!..isCondition(x)) {
+        ok <- TRUE
         if (!is.null(.fn)) .fn(x) else ""
       }
-      else {
-        shinyjs::hide(b)
-        x$message
-      } }
-    else {
-      shinyjs::hide(b)
-      ""
-    }})
+      else
+      if (x$message!="") x$message else toString(x)
+    } 
+    else ""
+    if (ok) ..enableLoad(input,output,page) else ..disableLoad(output,page)
+    m
+  })
 }
 
 ## Called by pages 'import' and 'create'
@@ -338,7 +335,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
     t <- make.names(input[[paste0(page,".out")]])
     x <- tryCatch(eval(parse(text=command), envir=.IGoR$env),
                   error=identity)
-    if (is(x,"condition")) {
+    if (..isCondition(x)) {
       output[[paste0(page,".preview")]] <- renderText("")
       output[[paste0(page,".comment")]] <- renderText(x$message)
     }
@@ -347,13 +344,13 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
         eval(parse(text=glue("attr({make.names(input$import.out)},'source')<- '{input$import.file}'")),
              envir=.IGoR$env)
       ..writeLog(page,command)
-      shinyjs::disable(paste0(page,".load"))
       if (t==input$main.data)
         .IGoR$state$meta <- Sys.time()
       ..newTable(input,output,t,.select=TRUE)
       d <- get(t, envir=.IGoR$env)
       output[[paste0(page,".preview")]] <- renderPrint(d %>% as_tibble() %>% print())
       output[[paste0(page,".comment")]] <- renderText(sprintf(.IGoR$Z$all$msg.result, t, nrow(d), ncol(d)))
+      ..disableLoad(output,page)
     }
   })
 
@@ -363,7 +360,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
                   .fn=NULL) {
   x <- tryCatch(eval(parse(text=command), envir=.IGoR$env),
                 error=identity)
-  if (is(x,"condition")) {
+  if (..isCondition(x)) {
     output[[paste0(page,".comment")]] <- renderText(x$message)
     NULL
   } else {
@@ -392,9 +389,12 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   output[[paste0(page,".comment")]] <- renderText(
     sprintf(.IGoR$Z$all$msg.result, t, nrow(d), ncol(d))
   )
-  shinyjs::disable(paste0(page,".load"))
+  ..disableLoad(output,page)
 }
 
+..disableLoad <- function(output,page) output[[paste0(page,".load")]] <- renderUI(NULL)
+..enableLoad <- function(input,output,page) 
+    output[[paste0(page,".load")]] <- renderUI(actionButton(paste0(page,".load"), ..buttonName(input,page)))
 
 ## Formatting of the command2 field
 ..textarea <- function (page,placeholder,rows,text)
@@ -433,7 +433,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 
     code <- tryCatch(parse(text=text2, keep.source=TRUE), error=identity)
     clipr::write_clip(
-      if ("condition" %in% class(code))
+      if (..isCondition(code))
         paste0('# ',.IGoR$Z$any$copy.invalid,'.\n', text)
       else {
         tmp  <- getParseData(code)
@@ -629,9 +629,9 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   if (box) box(width='100%', title=title, f()) else f()
 }
 
-## Builds the auxiliary input field for column selection box
-..select.what <- function(input,output,page,
-                          columns.all=FALSE) {
+## Adds an auxiliary input field for column selection box
+..output.select.what <- function(input,output,page,
+                                 columns.all=FALSE) {
   p <- function(item) paste0(page,".",item)
   i <- function(item) input[[p(item)]]
 
@@ -661,8 +661,8 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   })
 }
 
-## Builds the auxiliary input 'drop' checkbox for column selection box
-..select.drop <- function(input,output,page) {
+## Adds an the auxiliary input 'drop' checkbox for column selection box
+..output.select.drop <- function(input,output,page) {
   p <- function(item) paste0(page,".",item)
   i <- function(item) input[[p(item)]]
 

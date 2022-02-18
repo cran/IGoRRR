@@ -136,7 +136,7 @@ page_browse <- list(
       } }
     )
 
-   ..select.what(input,output,"browse")
+   ..output.select.what(input,output,"browse")
 
     output$browse.where <- renderUI({
       .IGoR$state$meta

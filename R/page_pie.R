@@ -32,7 +32,7 @@ page_pie <- list(
         )
     })
 
-    ..gVarLabel.ui(input,output,"pie","Y")
+    ..output.gVarLabel(input,output,"pie","Y")
 
     output$pie.command2 <- renderUI(
       ..textarea("pie", "gf_bar(~1, fill=~x) + coord_polar('y')", 4,

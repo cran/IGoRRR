@@ -51,9 +51,9 @@ page_mutate2 <- list(
                             coalesce="p1c= coalesce")
             else if (v %in% c("numeric","integer"))
                           c(coalesce="p1n= coalesce",
-                             .negate="r0 : funs(-.)")
+                             .negate="r0 : funs(`-`)")
             else if (v=="logical")
-                               c(not="r0 : funs(!.)")
+                               c(not="r0 : funs(`!`)")
             else
                       c(as.character="f0 : as.character"),
                              na.locf="r0 : na.locf"))

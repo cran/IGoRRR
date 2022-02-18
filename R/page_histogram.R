@@ -44,7 +44,7 @@ page_histogram <- list(
 			    column(width=6), ..label.ui("histogram","Y","density"))
     )   )
 
-    ..gVarLabel.ui(input,output,"histogram","X")
+    ..output.gVarLabel(input,output,"histogram","X")
 
     output$histogram.bins <- renderUI(
       if (!is.null(input$histogram.bins.type))

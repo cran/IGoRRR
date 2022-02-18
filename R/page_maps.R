@@ -193,7 +193,7 @@ page_maps <- list(
           checkboxInput("maps.borders", ..s3(.IGoR$Z$maps$borders), TRUE)
     )   )
 
-    ..gVarLabel.ui(input,output,"maps","X")
+    ..output.gVarLabel(input,output,"maps","X")
 
     output$maps.command2 <- renderUI(
       if (..isNotEmpty(input$main.data)

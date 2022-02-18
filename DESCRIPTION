@@ -1,8 +1,8 @@
 Package: IGoRRR
 Type: Package
 Title: A Shiny Interface for Simple Data Management
-Version: 0.2.0
-Author: Jean-Luc Lipatz [aut, cre]
+Version: 0.2.1
+Author: Jean-Luc Lipatz [aut, cre], Bernard Gestin [ctb]
 Maintainer: Jean-Luc Lipatz <jean-luc.lipatz@insee.fr>
 Description: 
   Launches a shiny application generating code to
@@ -18,13 +18,14 @@ Description:
   The generated code doesn't depend on IGoR and can be manually modified by the user or copied elsewhere.
 License: GPL (>= 2)
 Encoding: UTF-8
+ByteCompile: yes
 Depends: R (>= 4.0.0)
 Imports: shiny, shinydashboard, shinyjs, shinyWidgets, shinyFiles,
         htmltools, rhandsontable, sortable, purrr, stringr, glue,
         lubridate, zoo, tibble, dplyr (>= 1.0.0), tidyr, fuzzyjoin,
         rio, jsonlite, fst, feather, haven, readxl, Hmisc, skimr,
-        tables, ggformula, mapsf, clipr, magrittr, methods
+        tables, ggformula, mapsf, clipr, magrittr
 NeedsCompilation: no
-Packaged: 2022-02-11 13:04:59 UTC; H2IZGK
+Packaged: 2022-02-18 10:40:02 UTC; H2IZGK
 Repository: CRAN
-Date/Publication: 2022-02-11 19:20:04 UTC
+Date/Publication: 2022-02-18 10:50:02 UTC

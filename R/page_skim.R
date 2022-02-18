@@ -23,8 +23,8 @@ page_skim <- list(
                     drop=FALSE)
     })
 
-    ..select.what(input,output,"skim", columns.all=TRUE)
-    ..select.drop(input,output,"skim")
+    ..output.select.what(input,output,"skim", columns.all=TRUE)
+    ..output.select.drop(input,output,"skim")
 
     output$skim.command2 <- renderUI(
       ..textarea("skim", "skim(columns)", 2,

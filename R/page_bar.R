@@ -51,7 +51,7 @@ page_bar <- list(
         ) )
     })
 
-    ..gVarLabel.ui(input,output,"bar","X")
+    ..output.gVarLabel(input,output,"bar","X")
 
     output$bar.fill <- renderUI({
       .IGoR$state$meta

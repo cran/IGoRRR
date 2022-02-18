@@ -12,13 +12,14 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
 
 # UI ----------------------------------------------------------------------
 
-  ui <- dashboardPage(
+  ui <- shinydashboard::dashboardPage(
     skin = "blue",
 
-    header = dashboardHeader(
+    header = shinydashboard::dashboardHeader(
       title = "I Go R"
       ,tags$li(class = "dropdown", em(.IGoR$Z$version))
       ,tags$li(tags$a(
+                 target="_blank",
                  href = 'http://www.insee.fr',
                  img(src = "images/logo_insee.png",
                      title = "insee.fr", height = "46px"),
@@ -26,7 +27,7 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
                class = "dropdown")
     ),
 
-    sidebar = dashboardSidebar(
+    sidebar = shinydashboard::dashboardSidebar(
       tags$head(
         tags$style(HTML("
                       .main-sidebar {
@@ -50,7 +51,7 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
       ) ) )      )       )
     ),
 
-    dashboardBody(
+    shinydashboard::dashboardBody(
       div(id = "form",
         tags$script(
           'function checkifrunning() {
@@ -90,15 +91,7 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
 
   server <- function(input, output,session) {
     
-    # Remember the current settings
-    old <- options()
-    
-    # The width of the display of tibble previews (should be in config?)
-    options(width=200)
-
-    # on.exit(options(old)) activates too soon
-    # following code works, even if session is killed from RGUI
-    session$onSessionEnded(function() {options(old); shiny::stopApp()})
+    session$onSessionEnded(shiny::stopApp)
     
     output$main.igor <- renderImage(list(src=..image("IGoR.jpg")),deleteFile = FALSE)
     output$main.data <- ..renderTables(input,output)
@@ -116,7 +109,19 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
   }
 
 # Launch application ------------------------------------------------------
-
-  shiny::shinyApp(ui, server)
+  # Remember the current settings
+  old <- options()
+  
+  # The width of the display of tibble previews (should be in config?)
+  options(width=200)
+  # Deactivates sequence esc[..m used by tibble output in previews
+  options(crayon.enabled = FALSE)
+  
+  # Restores options when 'go' terminates
+  on.exit(options(old))
+  
+  app <- shiny::shinyApp(ui, server, options=list(launch.browser=TRUE))
+  print(app) # Application is launched here!
+  invisible(NULL)
 
 }

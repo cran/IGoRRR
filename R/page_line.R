@@ -45,11 +45,11 @@ page_line <- list(
         ) )
     })
 
-    ..gVarLabel.ui(input,output,"line","X")
+    ..output.gVarLabel(input,output,"line","X")
 
-    ..gVarLabel.ui(input,output,"line","Y")
+    ..output.gVarLabel(input,output,"line","Y")
 
-    ..gVarLabel.ui(input,output,"line","group")
+    ..output.gVarLabel(input,output,"line","group")
 
 
     output$line.loess <- renderUI(

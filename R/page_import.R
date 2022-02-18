@@ -343,11 +343,12 @@ page_import <- list(
 
     observeEvent({input$import.command2
                   input$import.out},
-      if (nchar(input$import.command2)>0)
-        output$import.load <- renderUI(actionButton("import.load",..buttonName(input,"import")))
+      if (..isNotEmpty(input$import.command2))
+        ..enableLoad(input,output,"import")
       else {
         output$import.comment <- renderText("")
         output$import.preview <- renderText("")
+        ..disableLoad(output,"import")
       }
     )
 

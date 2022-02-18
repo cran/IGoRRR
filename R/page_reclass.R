@@ -79,15 +79,16 @@ page_reclass <- list(
 
     observeEvent(input$reclass.command2,
       ..try(input,output,"reclass",
-        .fn=function(x) {
-          y <- inner_join(
-                 do.call(data.frame,Map(class,..data(input))) %>% gather(k,old),
-                 do.call(data.frame,Map(class,x)) %>% gather(k,new),
-                 by="k")
-          m <- y %>% filter(old!=new) %>% count() %>% pull(n)
-          n <- y %>%
-               filter((old=="factor")&!(new %in% c("factor","character"))) %>%
-               count() %>% pull(n)
+        function(x) {
+          a <- Map(class, ..data(input))
+          b <- Map(class, x)
+          d <- purrr::map2_lgl(a,b,identical)
+          m <- length(d[!d])  # Changed columns
+          d <- purrr::map2_lgl(a[!d], b[!d],
+                 function(old,new) ("factor" %in% old)                     # possibly length(old)>1
+                                  &(new %not in% c("factor","character"))  # allways length(new)==1
+               )
+          n <- length(d[d])   # Changed columns from factor to not factor or character
           if (m==0) .IGoR$Z$reclass$msg.nop
           else paste0(
             sprintf(.IGoR$Z$reclass$msg.result,m),

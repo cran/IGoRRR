@@ -1,4 +1,4 @@
-{"version": "version 1.87.0(FR)",
+{"version": "version 1.88.0(FR)",
  "init":{
    "require.msg": "*** Les packages suivants n'ont pas été chargés en mémoire :",
    "require.ask": "Puis-je charger en mémoire les packages manquants?",
@@ -199,7 +199,7 @@
      "La classe d'une variable conditionne les usages qui pourront être faits de ses données.",
 	 "Il peut y avoir pluseurs classes pour une variable.<br>",
      "Le <em>'label'</em> est un héritage de SAS et est utilisé pour enrichir les graphiques,",
-	 "il peut être positionné dans la page <em>créer/modifier une variable</em> du sous-menu <em>Recoder</em>."],
+	 "il peut être positionné dans la page <em>créer une variable</em> du sous-menu <em>Gérer les variables</em>."],
    "columns": {
      "position": "Position",
      "name":  "Nom",
@@ -360,6 +360,7 @@
      "du répertoire accéssible sous le nom 'home' dans les dialogues des pages de lecture et d'écriture de tables (résultat de la fonction <code>R.home()</code>)."],
    "table": "Table",
    "source": "Source",
+   "created": "Création",
    "delete": "Supprimer les références sélectionnées",
    "save": "Sauvegarder l'intégralité des tables en fin de session",
    "log": "Créer une table à partir du log",

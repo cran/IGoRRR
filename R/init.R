@@ -42,7 +42,7 @@ init <- function(envir,
 
 # Initialize IGoR environment ---------------------------------------------
 
-  .IGoR$config = jsonlite::fromJSON(system.file("text","config.json", package="IGoRRR"))
+  .IGoR$config <- jsonlite::fromJSON(system.file("text","config.json", package="IGoRRR"))
   .IGoR$config$volumes <- unlist(.IGoR$config$volumes) # 'shinyFiles' require vectors without message
   
   # The working environment
@@ -52,26 +52,23 @@ init <- function(envir,
   .IGoR$log <- list()
 
   # Used to synchronize page contents to table contents
-  .IGoR$sync=list()
+  .IGoR$sync <- list()
 
   # Some constants
   .IGoR$MAXROWNAMES = 100              # Maximum rows number for a row.names menu ('browse','view')
   .IGoR$COLORS      = c("black","red","green","blue","white","yellow","pink")
   
   # First item for column selection, when multiple=FALSE
-  .IGoR$NONE        = '' %>% {names(.)<- .IGoR$Z$any$none        ; .}
-  .IGoR$TABLE       = '' %>% {names(.)<- .IGoR$Z$any$table       ; .}
-  .IGoR$COLV        = '' %>% {names(.)<- .IGoR$Z$any$col         ; .}
-  .IGoR$CHRCOLV     = '' %>% {names(.)<- .IGoR$Z$any$col.chr     ; .}
-  .IGoR$QALCOLV     = '' %>% {names(.)<- .IGoR$Z$any$col.discrete; .}
-  .IGoR$NUMCOLV     = '' %>% {names(.)<- .IGoR$Z$any$col.numeric ; .}
+  .IGoR$NONE        = setNames('', .IGoR$Z$any$none)
+  .IGoR$TABLE       = setNames('', .IGoR$Z$any$table)
+  .IGoR$COLV        = setNames('', .IGoR$Z$any$col)
+  .IGoR$CHRCOLV     = setNames('', .IGoR$Z$any$col.chr)
+  .IGoR$QALCOLV     = setNames('', .IGoR$Z$any$col.discrete)
+  .IGoR$NUMCOLV     = setNames('', .IGoR$Z$any$col.numeric)
 
   # A recording of every generated code
   ..writeLog("","#Yes master!", append=FALSE)
-  
-  # For page 'skim' only: remove histograms: they are not displayed correctly under shiny
-  skimr::skim_with(numeric=list(hist=NULL), integer=list(hist=NULL))
-  
+
 
 # Load some example tables ------------------------------------------------
 

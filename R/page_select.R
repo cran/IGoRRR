@@ -21,7 +21,7 @@ page_select <- list(
       )
     })
 
-    ..select.drop(input,output,"select")
+    ..output.select.drop(input,output,"select")
 
     output$select.columns.more <- renderUI(
       if (!is.null(input$select.type)

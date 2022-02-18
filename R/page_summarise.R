@@ -33,7 +33,7 @@ page_summarise <- list(
           first="first",
           last="last")[i]
       else {
-        w <- .name(w)
+        w <- ..name(w)
         c(n=glue("sum({w})"),
           v=glue("sum({w}*{value})"),
           sum=glue("wtd.sum(.,w={w}_NA1_)"),

@@ -34,7 +34,7 @@ page_create <- list(
     output$create.command3 <- renderText(
       .IGoR$create.command3 <- glue("\", stringsAsFactors={input$create.factors}{na.strings()})"))
 
-    observeEvent({input$create.command
+    observeEvent({input$create.command2
                   input$create.out
                   input$create.columns
                   input$create.na.strings
@@ -42,23 +42,20 @@ page_create <- list(
       output$create.comment <- renderText({
         output$create.preview <- NULL
         t <- make.names(input$create.out)
-        b <- "create.load"
         s <- paste0(glue(command1),'\n',input$create.command2,glue(.IGoR$create.command3))
-        if (nchar(s)>0) {
+        if (..isNotEmpty(s)) {
           x <- tryCatch(eval(parse(text=s), envir=.IGoR$env),
                         error=identity)
-          if (is.data.frame(x)) {
-            output$create.load <- renderUI(actionButton(b,..buttonName(input,"create")))
-            shinyjs::enable(b)
-            shinyjs::show(b)
+          if (!..isCondition(x)) {
+            ..enableLoad(input,output,"create")
             sprintf(.IGoR$Z$create$msg.result,t,nrow(x),ncol(x))
           }
           else {
-            shinyjs::hide(b)
+            ..disableLoad(output,"create")
             x$message
         } }
         else {
-          shinyjs::hide(b)
+          ..disableLoad(output,"create")
           ""
       } } )
     )
