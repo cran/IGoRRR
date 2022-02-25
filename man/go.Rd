@@ -44,7 +44,7 @@ but there is now provision, today, to add some. The menus names cannot be change
 in the file \code{FR.json} where the actual titles are extracted.
 
 The file \code{FR.json} contains every text that is displayed in the user's language. It contains the title of every widget displayed by Shiny and also
-every text that is used to help the user in its use of IGoRR. Current file is in french language and may be completed by files in some other languess
+every text that is used to help the user in its use of IGoR. Current file is in french language and may be completed by files in some other languess
 in the future, although the code todays doen't give any choice.
 
 }

@@ -73,7 +73,7 @@ page_bar <- list(
 
     output$bar.command2 <- renderUI(
       ..textarea("bar", "gf_bar(~x)", 3, 
-        if (..isNotEmpty(input$bar.X)) {
+        if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$bar.X)) {
           x <- if (..isTRUE(input$bar.reorder)) glue("reorder({..name(input$bar.X)},`n()`)") else ..nameg(input$bar.X)
           fill <- if (length(input$bar.fill.type)==0) ""
                   else

@@ -272,7 +272,7 @@ page_tabular <- list(
     observeEvent({.IGoR$state$data; input$tabular.command2},
       isolate(
         output$tabular.output <- renderText(
-          if (nchar(input$tabular.command2)>0) {
+          if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$tabular.command2)) {
             command <- paste0(input$main.data,' %>% ',input$tabular.command2)
             x <- tryCatch(eval(parse(text=command)),
                           error=function(e) {

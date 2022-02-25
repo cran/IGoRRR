@@ -36,7 +36,7 @@ page_pie <- list(
 
     output$pie.command2 <- renderUI(
       ..textarea("pie", "gf_bar(~1, fill=~x) + coord_polar('y')", 4,
-        if (..isNotEmpty(input$pie.Y)) {
+        if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$pie.Y)) {
           Y <- ..nameg(input$pie.Y)
           x <- if (..isNotEmpty(input$pie.X)) glue("| {..nameg(input$pie.X)}, position=position_fill()") else ""
           w <- if (..isNotEmpty(input$pie.W)) input$pie.W else ""

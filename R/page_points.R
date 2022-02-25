@@ -5,7 +5,7 @@
 
 page_points <- list(
 
-  ui = function() ..ui(page="points", icon="line", graphics=TRUE),
+  ui = function() ..ui(page="points", graphics=TRUE),
 
 
   server = function(input, output, session) {
@@ -38,7 +38,7 @@ page_points <- list(
 
     output$points.dropdown <- renderUI({
       .IGoR$state$meta
-      if (..isNotEmpty(input$main.data))
+      if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$main.data))
         ..dropdownButton(page="points",
           fluidRow(
             column(width=4, radioButtons("points.size.type",..s2(.IGoR$Z$points$size.type),..Znames("points","type",c("var","all")))),

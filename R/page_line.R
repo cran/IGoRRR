@@ -58,7 +58,7 @@ page_line <- list(
 
     output$line.command2 <- renderUI(
       ..textarea("line", "gf_line(y ~ x)", 6,
-        if (..isNotEmpty(input$line.Y)&&..isNotEmpty(input$line.X)) {
+        if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$line.Y)&&..isNotEmpty(input$line.X)) {
           color <- if (..isNotEmpty(input$line.group)) glue(", color=~{..nameg(input$line.group)}") else ""
           pronoun <- if (..isNotEmpty(input$line.group)) "data" else ""
           if (..isTRUE(input$line.loess)) {

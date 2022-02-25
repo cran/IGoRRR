@@ -5,7 +5,7 @@
 
 page_reclass <- list(
 
-  ui = function() ..ui(page="reclass", icon="rename", control=TRUE),
+  ui = function() ..ui(page="reclass", control=TRUE),
 
 
   server = function(input, output, session) {

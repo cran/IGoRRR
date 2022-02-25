@@ -1,5 +1,4 @@
 {"volumes":{
-  "data": "V:/PALETTES/IGoR/data",
   "home": ".",
   "C": "C:/",
   "U": "U:/",
@@ -13,11 +12,11 @@
     "contents",
     "view",
     "browse",
-    "edit",
     "distinct",
     "create",
     "import",
     "export",
+    "edit",
 	  "tables"],
 	"update":[
     "rename",

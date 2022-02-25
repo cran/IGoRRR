@@ -83,7 +83,7 @@ page_import <- list(
                   column(width=6,
                          selectizeInput("import.sas.columns", ..s2(.IGoR$Z$import$vars),
                                         multiple = TRUE, options = list(placeholder = .IGoR$Z$any$all),
-                                        choices = sort(colnames(haven::read_sas(input$import.file,n_max=0))))),
+                                        choices = sort(colnames(read_sas(input$import.file,n_max=0))))),
                   column(width=3, numericInput("import.sas.nrows", ..s2(.IGoR$Z$import$nrows), Inf)),
                   column(width=3, encoding.ui())
                 )

@@ -5,7 +5,7 @@
 
 page_spread <- list(
 
-  ui = function() ..ui(page="spread", icon="gather",
+  ui = function() ..ui(page="spread",
     fluidRow(
       column(width=6,
         imageOutput("spread.long",height='200px'),

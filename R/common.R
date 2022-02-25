@@ -1,4 +1,4 @@
-## Since 3.5, as_tibble clears class skim_df whenit exists
+## Since 3.5, as_tibble clears class skim_df when it exists
 as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::as_tibble(.data)
 
 
@@ -230,7 +230,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   
   observeEvent({i('command2'); .IGoR$state$data},
     output[[p('plot')]] <- renderPlot(
-      if (..isNotEmpty(i('command2')))
+      if (..isNotEmpty(input$main.data)&&..isNotEmpty(i('command2')))
         ..do1(input,output,page,paste(input$main.data,'%>%',i('command2')))
   ) )
 
@@ -253,7 +253,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 ..output.gVarLabel <- function(input,output,page,var)
   output[[paste0(page,".",var,".label")]] <- renderUI({
     v <- input[[paste0(page,".",var)]]
-    if (..isNotEmpty(v))
+    if (..isNotEmpty(input$main.data)&&..isNotEmpty(v))
       textInput(paste0(page,".",var,".label"),..s2(.IGoR$Z$any$title),{
         d <- ..data(input)
         l <- attr(d[[v]],'label')
@@ -508,6 +508,9 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 
 # UI tools ----------------------------------------------------------------
 # Standardized UI for all pages
+# NOTE: To the exception of 'mapsf' one (maps_w_trans.png) garatiously provided by Timthée Giraud on https://github.com/riatelab/mapsf/ ,
+#   all icons are home made ones, transformed by https://tech-lagoon.com/imagechef/en/white-to-transparent
+
 ..ui <- function(..., page,
                 icon=page,
                 command=TRUE,
@@ -518,7 +521,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
   div(id=paste0("div_",page),
     fluidRow(
       column(width=4,
-        img(src=paste0("images/",icon,".png"), height = "48px"),
+        img(src=paste0("images/",icon,"_w_trans.png"), height = "48px"),
         h3(span(.IGoR$Z[[page]]$page.title, style="color: blue"))
       ),
       column(width=8,

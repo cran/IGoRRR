@@ -53,7 +53,7 @@ page_col <- list(
 
     output$col.command2 <- renderUI(
       ..textarea("col", "gf_col(y~x)", 6,
-        if (..isNotEmpty(input$col.X)&&..isNotEmpty(input$col.N)) {
+        if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$col.X)&&..isNotEmpty(input$col.N)) {
           s <- c(if (..isNotEmpty(input$col.M))
                  paste0(
                    "\n     ",

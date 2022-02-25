@@ -57,7 +57,7 @@ page_histogram <- list(
 
     output$histogram.command2 <- renderUI(
       ..textarea("histogram", "gf_dhistogram(~x)", 3,
-        if (..isNotEmpty(input$histogram.X)) {
+        if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$histogram.X)) {
           bins <- if ((length(input$histogram.bins)==0)
                     ||(length(input$histogram.bins.type)==0)
                     ||((input$histogram.bins.type=="bins")&&(input$histogram.bins==25))

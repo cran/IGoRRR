@@ -5,7 +5,7 @@
 
 page_browse <- list(
 
-  ui = function() ..ui(page="browse", icon="view", command=FALSE,
+  ui = function() ..ui(page="browse", command=FALSE,
     fluidRow(
       column(width=6,
         box(width='100%',

@@ -43,7 +43,7 @@ page_boxplot <- list(
 
     output$boxplot.command2 <- renderUI(
       ..textarea("boxplot", "gf_boxplot(y~x)", 3,
-        if (..isNotEmpty(input$boxplot.Y))
+        if (..isNotEmpty(input$main.data)&&..isNotEmpty(input$boxplot.Y))
           ..command2(
             "gf_boxplot(",
             glue(if (..isNotEmpty(input$boxplot.X))

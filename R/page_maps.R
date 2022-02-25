@@ -196,10 +196,8 @@ page_maps <- list(
     ..output.gVarLabel(input,output,"maps","X")
 
     output$maps.command2 <- renderUI(
-      if (..isNotEmpty(input$main.data)
-         &&..isNotNA(sf::st_crs(..data(input))$input)
-         )
-        ..textarea("maps", "map_...", 5,{
+      ..textarea("maps", "map_...", 5,
+        if (..isNotEmpty(input$main.data)&&..isNotNA(sf::st_crs(..data(input))$input)) {
           theme  <- if1(..isNE(input$maps.theme,"default"), "mapsf::mf_theme(\"{input$maps.theme}\")")
           labels <- if (..isNE(input$maps.labels.var,.IGoR$CHRCOLV)&&..isNotEmpty(input$maps.labels.table)) {
             labels.cex <- if1(..isNE(input$maps.labels.cex,1),     ", cex={input$maps.labels.cex}")

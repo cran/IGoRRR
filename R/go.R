@@ -1,9 +1,5 @@
 go <- function(envir=.GlobalEnv, examples=TRUE) {
 
-  # old <- options() 
-  # Following doesn't work : it restores options before the start of the application
-  # on.exit(options(old)) 
-  
   init(envir,examples) # libraries and global data
 
   # Enable access to images from html
@@ -18,13 +14,6 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
     header = shinydashboard::dashboardHeader(
       title = "I Go R"
       ,tags$li(class = "dropdown", em(.IGoR$Z$version))
-      ,tags$li(tags$a(
-                 target="_blank",
-                 href = 'http://www.insee.fr',
-                 img(src = "images/logo_insee.png",
-                     title = "insee.fr", height = "46px"),
-                 style = "padding-top:2px; padding-bottom:2px;"),
-               class = "dropdown")
     ),
 
     sidebar = shinydashboard::dashboardSidebar(
@@ -38,7 +27,7 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
                       font-family : Arial;
                       }
                       "))),
-      imageOutput("main.igor",height='128px'),
+      imageOutput("main.igor",height='140px'),
       tags$div(id = "loading", tags$script('$("#loading").hide()')),
       uiOutput("main.data"),
       do.call(sidebarMenu,
@@ -53,6 +42,8 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
 
     shinydashboard::dashboardBody(
       div(id = "form",
+        # Following javascript code is imported from https://colinfay.me/watch-r-shiny/
+        # Don't re-use or modify without contacting the author at contact@colinfay.me 
         tags$script(
           'function checkifrunning() {
           var is_running = $("html").attr("class").includes("shiny-busy");
@@ -93,7 +84,11 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
     
     session$onSessionEnded(shiny::stopApp)
     
-    output$main.igor <- renderImage(list(src=..image("IGoR.jpg")),deleteFile = FALSE)
+    output$main.igor <- renderImage(
+      list(src=..image("jll.png"), height = "230px"),
+      deleteFile = FALSE
+    )
+    
     output$main.data <- ..renderTables(input,output)
 
     state <- reactiveValues()
@@ -101,7 +96,7 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
     .IGoR$state$data <- Sys.time() # will change every time contents of current table changes
     .IGoR$state$meta <- Sys.time() # will change every time structure of current table changes
     .IGoR$state$list <- Sys.time() # will change every time the list of current tables changes
-
+  
     # Launch the servers for all the pages present in config
     walk(unlist(.IGoR$config$menus, use.names=FALSE),
          function(x) (get(paste0("page_",x))$server)(input,output,session))

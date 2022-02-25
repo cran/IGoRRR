@@ -43,7 +43,10 @@ init <- function(envir,
 # Initialize IGoR environment ---------------------------------------------
 
   .IGoR$config <- jsonlite::fromJSON(system.file("text","config.json", package="IGoRRR"))
-  .IGoR$config$volumes <- unlist(.IGoR$config$volumes) # 'shinyFiles' require vectors without message
+  .IGoR$config$volumes <- 
+    c("data" = system.file("misc",package="IGoRRR"),
+      unlist(.IGoR$config$volumes) # 'shinyFiles' require vectors without message
+    )
   
   # The working environment
   .IGoR$env <- envir
