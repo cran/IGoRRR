@@ -1,8 +1,11 @@
 init <- function(envir,
-                 examples) {
+                 examples,
+                 language) {
   
   # Every message, every label that is output in national language come from here
-  .IGoR$Z <- jsonlite::fromJSON(system.file("text","FR.json", package="IGoRRR"))
+  .IGoR$Z <- jsonlite::fromJSON(system.file("text",paste0(language,".json"), package="IGoRRR"))
+  
+  if ("environment" %not in% class(envir)) stop(.IGoR$Z$init$error.envir)
   
   # Ask the user to load the packages needed by the generated code.
   # For beginners from scratch, we keep the generated code as simple as possible 
@@ -89,6 +92,10 @@ init <- function(envir,
     df <- mapsf::mf_get_mtq()
     attr(df,'source') <- 'mapsf'
     assign(.IGoR$Z$init$example.sf, df, envir=.IGoR$env)
+    
+    df <- datasets::mtcars
+    attr(df,'source') <- 'datasets'
+    assign("mtcars", df, envir=.IGoR$env)
   }
 
 }

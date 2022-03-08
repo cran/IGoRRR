@@ -1,5 +1,6 @@
-{"version": "version 1.89.0(FR)",
+{"version": "Hoc opus, hic labor est",
  "init":{
+   "error.envir": "Le paramètre 'envir' doit être un 'environment'.",
    "require.msg": "*** Les packages suivants n'ont pas été chargés en mémoire :",
    "require.ask": "Puis-je charger en mémoire les packages manquants?",
    "require.err": "*** ABANDON: Le code généré par IGoR ne pourrait pas fonctionner!",
@@ -407,6 +408,12 @@
    "class.as.Date": "date",
    "short": "Réutiliser les noms",
    "empty": "Mettre 'valeur manquante' pour les chaînes vides",
+   "format": "format",
+   "formats": {
+     "standard": "AAAA-MM-JJ, AAAA/MM/JJ",
+     "%d-%m-%Y": "JJ-MM-AAAA",
+     "%d-%m-%y": "JJ-MM-AA"
+   },
    "msg.factor": "ATTENTION : Convertir une variable facteur en autre chose que du caractère peut conduire à des résultats inattendus.",
    "msg.nop": "Il n'y a aucune variable à convertir!",
    "msg.result": "NOTE : Il y aura %d changement(s) de type."
@@ -421,9 +428,11 @@
      "le numéro de chaque tranche devenant une modalité de la nouvelle variable qualitative.<br>",
      "<em>NOTE : si le nom de la table résultat est celui de la table courante, la page se réinitialise dès que la modification a fonctionné.</em>"],
    "method": "Méthode",
-   "method.value": "Valeurs individuelles",
-   "method.breaks": "Tranches manuelles",
-   "method.step": "Tranches régulières",
+   "methods":{
+	  "value": "Valeurs individuelles",
+      "breaks": "Tranches manuelles",
+      "step": "Tranches régulières"
+   },
    "breaks": "Breaks (séparés par des virgules)",
    "breaks.right": "Borne supérieure comprise",
    "step": "Taille des tranches",
@@ -575,9 +584,11 @@
 	 "- Ces opérations n'ont un sens qu'entre ensembles d'objets de même type : les tables impliquées doivent donc avoir la même structure.<br>",
      "<em>NOTE : la page se réinitialise dès que l'opération a fonctionné.</em>"],
    "type": "Collecter...",
-   "type.union": "l'ensemble des lignes des deux tables",
-   "type.intersect": "l'ensemble des lignes communes aux deux tables",
-   "type.setdiff": "l'ensemble des lignes de la première table n'apparaissant pas dans la seconde"
+   "types":{
+     "union": "l'ensemble des lignes des deux tables",
+     "intersect": "l'ensemble des lignes communes aux deux tables",
+     "setdiff": "l'ensemble des lignes de la première table n'apparaissant pas dans la seconde"
+   }
  },
 "join":{
    "menu.title": "Jointure sur égalité",
@@ -831,15 +842,17 @@
      "<em>NOTE : Les fonctionnalités présentées ici ne le sont qu'à titre démonstratif.</em>"],
    "theme": "Thème",
    "legend": "Position de la légende",
-   "legend.default": "<defaut>",
-   "legend.topleft": "En haut à gauche",
-   "legend.top": "En haut",
-   "legend.topright": "En haut à droite",
-   "legend.right": "A droite",
-   "legend.bottomright": "En bas à droite",
-   "legend.bottom": "En bas",
-   "legend.bottomleft": "En bas à gauche",
-   "legend.left": "A gauche",
+   "legends":{
+     "default": "<defaut>",
+     "topleft": "En haut à gauche",
+     "top": "En haut",
+     "topright": "En haut à droite",
+     "right": "A droite",
+     "bottomright": "En bas à droite",
+     "bottom": "En bas",
+     "bottomleft": "En bas à gauche",
+     "left": "A gauche"
+   },
    "labels.var": "Etiquettes avec",
    "labels.table": "de la table",
    "labels.col": "Couleur",
@@ -850,10 +863,12 @@
    "type2.typo": "Classes",
    "type2.symb": "Symboles",
    "breaks": "Methode de discrétisation",
-   "breaks.quantile": "quantile",
-   "breaks.kmeans": "kmeans",
-   "breaks.fisher": "Fisher",
-   "breaks.jenks": "Jenks",
+   "breaks.methods":{
+     "quantile": "quantile",
+     "kmeans": "kmeans",
+     "fisher": "Fisher",
+     "jenks": "Jenks"
+   },
    "nbreaks": "Nombre de classes",
    "pal": "Palette",
    "borders": "Tracer les contours",

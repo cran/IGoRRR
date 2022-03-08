@@ -12,6 +12,12 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 # Utilities for national language conversions -----------------------------
 
 ## Extract a list of sub items for an item of a page
+..Zitems <- function(page, section) {
+  l <- unlist(.IGoR$Z[[page]][[section]])
+  setNames(names(l),l)
+}
+
+## Renames a list of items
 ..Znames <- function(page, item, items) {
   names(items)<- Vectorize(function(x) .IGoR$Z[[page]][[paste0(item,'.',x)]])(items)
   items
@@ -294,7 +300,7 @@ as_tibble <- function(.data) if ("tbl_df" %in% class(.data)) .data else tibble::
 ..gSaveCmd <- function(input,page)
   if (..isTRUE(input[[paste0(page,".save")]])) {
     f <- parseSavePath(.IGoR$config$volumes,input[[paste0(page,"SaveButton")]])$datapath
-    if (..isNotEmpty(f)) paste0(NL,"{",glue("ggsave(\"{f}\",device='png')","; .}"))
+    if (..isNotEmpty(f)) paste0(NL,"{",glue("ggsave(\"{f}\", device='png', plot=.)","; .}"))
   }
 
 

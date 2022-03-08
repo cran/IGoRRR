@@ -1,6 +1,5 @@
 
 ### Changes the type of columns of the current table
-###   Dependencies on specific packages: dplyr, tidyr.
 ###   Dependencies in generated code: dplyr.
 
 page_reclass <- list(
@@ -27,19 +26,22 @@ page_reclass <- list(
                                        ..Znames("reclass","class",c("factor","as.character","as.double","as.integer","as.logical","as.Date")))
               ) ),
               column(width=6,
-                checkboxInput("reclass.short",..s5(.IGoR$Z$reclass$short),TRUE),
-                uiOutput("reclass.empty")
+              uiOutput("reclass.parm"),
+               checkboxInput("reclass.short",..s5(.IGoR$Z$reclass$short),TRUE)
         ) ) ) )
     })
 
-    output$reclass.empty <- renderUI(
+    output$reclass.parm <- renderUI(
       if (..isEQ(input$reclass.class.out,"factor")
-        &&(length(input$reclass.type)>0)
+        &&!is.null(input$reclass.type)
         &&((input$reclass.type!=2)
          ||((input$reclass.type==2)
           &&((..isEQ(input$reclass.class,"character")&&!input$reclass.drop)
            ||(..isNE(input$reclass.class,"character")&&input$reclass.drop)))))
         checkboxInput("reclass.empty",..s5(.IGoR$Z$reclass$empty),TRUE)
+      else
+      if (..isEQ(input$reclass.class.out,"as.Date"))
+        selectizeInput("reclass.format",..s2(.IGoR$Z$reclass$format), choices=..Zitems("reclass","formats"))
     )
 
     output$reclass.command2 <- renderUI(
@@ -51,12 +53,14 @@ page_reclass <- list(
                     &&((..isEQ(input$reclass.class,"character")&&!input$reclass.drop)
                      ||(..isNE(input$reclass.class,"character")&&input$reclass.drop))))
                   &&..isTRUE(input$reclass.empty)) ", exclude=''" else ""
+          ft <- if (..isEQ(input$reclass.class.out,"as.Date")&..isNE(input$reclass.format,"standard"))
+            glue(", format=\"{input$reclass.format}\"")
           ..command2(
             "mutate",
             if (!..isTRUE(input$reclass.short)) {
               old <- ..name(..select.columns(input,output,"reclass"))
               if (length(old)==0) paste0("() # ",.IGoR$Z$reclass$nop)
-              else glue("({..collapse0(paste0(old,'=',input$reclass.class.out,'(',old,na,')'))})")
+              else glue("({..collapse0(paste0(old,'=',input$reclass.class.out,'(',old,na,ft,')'))})")
             }
             else
               paste0(
@@ -72,6 +76,7 @@ page_reclass <- list(
                 else glue("_at({..select(input,'reclass',vars=TRUE)}, "),
                 input$reclass.class.out,
                 na,
+                ft,
                 ")"
           )   )
         }
@@ -81,19 +86,25 @@ page_reclass <- list(
       ..try(input,output,"reclass",
         function(x) {
           a <- Map(class, ..data(input))
+          a <- data.frame(names=names(a), classes=I(a))
           b <- Map(class, x)
-          d <- purrr::map2_lgl(a,b,identical)
-          m <- length(d[!d])  # Changed columns
-          d <- purrr::map2_lgl(a[!d], b[!d],
-                 function(old,new) ("factor" %in% old)                     # possibly length(old)>1
-                                  &(new %not in% c("factor","character"))  # allways length(new)==1
-               )
-          n <- length(d[d])   # Changed columns from factor to not factor or character
+          b <- data.frame(names=names(b), classes=I(b)) # may be longer than a if names are not reused
+          d <- merge(a,b, by="names", all.y=TRUE)
+          e <- mapply(identical, d$classes.y, d$classes.x)
+          m <- length(e[!e])  # Changed columns
           if (m==0) .IGoR$Z$reclass$msg.nop
-          else paste0(
-            sprintf(.IGoR$Z$reclass$msg.result,m),
-            if (n>0) paste0("\n",.IGoR$Z$reclass$msg.factor)
-          )
+          else {
+            f <- mapply(
+                   function(old,new) ("factor" %in% old)                     # possibly length(old)>1
+                                    &(new %not in% c("factor","character")), # allways length(new)==1
+                   d$classes.x[!e], d$classes.y[!e]
+                 )
+            n <- length(f[f])   # Changed columns from factor to not factor nor character
+            paste0(
+              sprintf(.IGoR$Z$reclass$msg.result,m),
+              if (n>0) paste0("\n",.IGoR$Z$reclass$msg.factor)
+            )
+          }
         }
     ) )
 

@@ -128,7 +128,7 @@ page_summarise <- list(
                   if (..isTRUE(input$summarise.names))
                        paste0('\"',nm,'\"=',f1)
                   else ifelse(str_detect(f1,"[()]"),paste0('\"',nm,'\"=',f1),f1))
-          if ((length(f1)>1)||..isTRUE(input$summarise.names)||str_detect(f1,"[()]")) fn <- glue("funs({fn})")
+          if ((length(f1)>1)||..isTRUE(input$summarise.names)||str_detect(f1,"[()]")) fn <- glue("list({fn})")
           ..command2(
             ..group_by(input,"summarise"),
             "summarise",

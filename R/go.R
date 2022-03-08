@@ -1,6 +1,8 @@
 go <- function(envir=.GlobalEnv, examples=TRUE) {
+  
+  language <- "FR" # The only possibility!
 
-  init(envir,examples) # libraries and global data
+  init(envir,examples,language) # libraries and global data
 
   # Enable access to images from html
   shiny::addResourcePath(prefix = "images",
@@ -13,7 +15,8 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
 
     header = shinydashboard::dashboardHeader(
       title = "I Go R"
-      ,tags$li(class = "dropdown", em(.IGoR$Z$version))
+      ,tags$li(class = "dropdown", em(glue('"{.IGoR$Z$version}" -- {utils::packageVersion("IGoRRR")}({language})')))
+      ,uiOutput("main.auto")
     ),
 
     sidebar = shinydashboard::dashboardSidebar(
@@ -44,6 +47,7 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
       div(id = "form",
         # Following javascript code is imported from https://colinfay.me/watch-r-shiny/
         # Don't re-use or modify without contacting the author at contact@colinfay.me 
+        # License : MIT
         tags$script(
           'function checkifrunning() {
           var is_running = $("html").attr("class").includes("shiny-busy");
@@ -96,6 +100,13 @@ go <- function(envir=.GlobalEnv, examples=TRUE) {
     .IGoR$state$data <- Sys.time() # will change every time contents of current table changes
     .IGoR$state$meta <- Sys.time() # will change every time structure of current table changes
     .IGoR$state$list <- Sys.time() # will change every time the list of current tables changes
+    
+    # .IGoR$auto <- TRUE
+    # autoInvalidate <- reactiveTimer(10000)
+    # observe({
+    #   autoInvalidate()
+    #   output$main.auto <- renderText(as.character(as.integer(.IGoR$auto <- !.IGoR$auto)))
+    # })
   
     # Launch the servers for all the pages present in config
     walk(unlist(.IGoR$config$menus, use.names=FALSE),
