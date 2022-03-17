@@ -32,6 +32,8 @@
 	'summarise': replaced deprecated 'funs'.
 	graphics (..gSaveCmd): modified ggsave call that fully worked but was source of confusion.
 	'tabular': fixed unknown function '.name' error with weighting column.
+0.3.2
+	'tables': fixed wtd.percent function made incorrect in the CRAN version
 	
 BUGS:
 	File names with spécial characters are no more supported when package comes from CRAN.
