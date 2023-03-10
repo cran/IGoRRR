@@ -34,6 +34,10 @@
 	'tabular': fixed unknown function '.name' error with weighting column.
 0.3.2
 	'tables': fixed wtd.percent function made incorrect in the CRAN version
+0.3.3
+	'import', parquet files: added selection of columns and condition
+0.3.4
+	'import", parquet files: added extraction of first lines
 	
 BUGS:
 	File names with spécial characters are no more supported when package comes from CRAN.

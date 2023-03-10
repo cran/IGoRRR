@@ -1,5 +1,5 @@
-f84e04e11d724686cb56a7f57491872d *DESCRIPTION
-837eddfeb41bde3cd1d2e2575c865551 *NAMESPACE
+f8f0559767ecc00bf54cdc1fa156d4c2 *DESCRIPTION
+e8435a5a5f5ba32f7e74822eaaca3ce5 *NAMESPACE
 ab967bd4f02b43e5460e3480dc0c1374 *R/common.R
 506ce885190c54d7808de58eb1735cdc *R/go.R
 1646d7a19247263fa4f6c3a837852cf6 *R/init.R
@@ -18,7 +18,7 @@ a13ae31d6740c9e2539aa98641896925 *R/page_distinct.R
 ea2b932218e382bda54eeb6b8b83bfb4 *R/page_fuzzyjoin.R
 aab2995aa8450192b9fcfa328e178b10 *R/page_gather.R
 6299f2fc6bd7942c6106802e77d34435 *R/page_histogram.R
-b379cdc56340783bee63a2b284917f56 *R/page_import.R
+5f4f79bbc9b4c39973bb6ebbc112b3d3 *R/page_import.R
 f857d4255547e2c66db73ee3763540e7 *R/page_join.R
 5c58c0f207ba10551ed9e9407f8d277a *R/page_labels.R
 aaa0b1543e7e8f95aaf1b7315ec4b594 *R/page_line.R
@@ -80,7 +80,7 @@ bf070488d348fa1cc5f4e3c13ef16f0e *inst/images/spread_w_trans.png
 774a9a5d6881553d353f23d321d0fe00 *inst/images/view_w_trans.png
 ba003a94a26bf9fbe0fcfe4af4e4c87a *inst/images/wide.png
 99ccdf4bc9eab8ffd191a1895e21be41 *inst/misc/example.RDS
-62aac8b0d6878a4f3ff2cc259d7bd368 *inst/misc/news.txt
-fe13139b0f47dc3003f13e261ba8280e *inst/text/FR.json
+1574613dca9e6331620a9bf5bbb11087 *inst/misc/news.txt
+939aaafdac57d4ffd387716848a96ff2 *inst/text/FR.json
 68cdee0d3289dba87d09aae3f78971fd *inst/text/config.json
 d10e971cc5073d5629c481ccc3b66f01 *man/go.Rd

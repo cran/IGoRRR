@@ -78,13 +78,28 @@ page_import <- list(
         type <- ..pathExt(input$import.file)
         if (!is.na(type)) # Occurs at dot when typing in the file name
           box(width='100%',
+            if (type=="parquet")
+              fluidRow(
+                column(width=6,
+                  selectizeInput("import.parquet.columns", ..s2(.IGoR$Z$import$vars),
+                                 multiple = TRUE, options = list(placeholder = .IGoR$Z$any$all),
+                                 choices = sort(names(arrow::open_dataset(input$import.file)))
+                )),
+                column(width=6,
+                  uiOutput("import.parquet.parms"),
+                  radioButtons("import.parquet.filter",.IGoR$Z$import$parquet.filter,
+                               ..Znames("import","parquet.filter",c("all","nrow","where")),
+                               inline=TRUE)
+                ))
+            else
             if (type=="sas7bdat")
               if (packageVersion("haven")>="2.2.0")
                 fluidRow(
                   column(width=6,
-                         selectizeInput("import.sas.columns", ..s2(.IGoR$Z$import$vars),
-                                        multiple = TRUE, options = list(placeholder = .IGoR$Z$any$all),
-                                        choices = sort(colnames(read_sas(input$import.file,n_max=0))))),
+                     selectizeInput("import.sas.columns", ..s2(.IGoR$Z$import$vars),
+                                    multiple = TRUE, options = list(placeholder = .IGoR$Z$any$all),
+                                    choices = sort(colnames(read_sas(input$import.file,n_max=0)))
+                  )),
                   column(width=3, numericInput("import.sas.nrows", ..s2(.IGoR$Z$import$nrows), Inf)),
                   column(width=3, encoding.ui())
                 )
@@ -153,11 +168,11 @@ page_import <- list(
               column(width=6,
                 selectizeInput("import.feather.columns", ..s2(.IGoR$Z$import$vars),
                                multiple = TRUE, options = list(placeholder = .IGoR$Z$any$all),
-                               choices = sort(attr(feather_metadata(input$import.file)$types,'names')))
-              ),
+                               choices = sort(attr(feather_metadata(input$import.file)$types,'names'))
+              ) ),
               column(width=6,
                  uiOutput("import.feather.parms"),
-                 checkboxInput("import.feather.filter",..s3(.IGoR$Z$import$feather.where),FALSE)
+                 checkboxInput("import.feather.filter",..s3(.IGoR$Z$import$where),FALSE)
               ) )
 		      else
 		      if (type=="shp")
@@ -166,7 +181,6 @@ page_import <- list(
 		          column(width=3, selectizeInput("import.shp.encoding",..s2(.IGoR$Z$import$encoding),
 		                                         choices=c("","WINDOWS-1252")))
 		        )
-
     )})
 
     output$import.csv.dec <- renderUI(
@@ -225,7 +239,16 @@ page_import <- list(
         if (input$import.fst.filter=="where")
           textInput("import.fst.expr",..s2(.IGoR$Z$import$expr))
     )
-
+    
+    output$import.parquet.parms <- renderUI(
+      if (!is.null(input$import.parquet.filter))
+        if (input$import.parquet.filter=="nrow")
+          numericInput("import.parquet.nrow",..s2(.IGoR$Z$import$parquet.nrow),10)
+      else
+        if (input$import.parquet.filter=="where")
+          textInput("import.parquet.where",..s2(.IGoR$Z$import$expr))
+    )
+    
     output$import.feather.parms <- renderUI(
       if (..isTRUE(input$import.feather.filter))
         textInput("import.feather.expr",..s3(.IGoR$Z$import$expr))
@@ -239,11 +262,29 @@ page_import <- list(
           type <- ..pathExt(input$import.file)
           if (is.na(type)) NULL  # Occurs at dot when typing in the file name
           else
-          if ((type=="fst")&&..isEQ(input$import.fst.filter,'where')&&..isNotEmpty(input$import.fst.expr))
+          if ((type=="parquet")&&
+              ((length(input$import.parquet.columns)>0)
+               || ..isEQ(input$import.parquet.filter,"nrow")
+               ||(..isEQ(input$import.parquet.filter,"where")&&..isNotEmpty(input$import.parquet.where))
+             ))
+            ..command2(
+              glue("arrow::open_dataset(\"{input$import.file}\")"),NL,
+              if (..isEQ(input$import.parquet.filter,"nrow"))
+                paste0(glue("head({input$import.parquet.nrow})"),NL)
+              else
+              if (..isEQ(input$import.parquet.filter,"where")&&..isNotEmpty(input$import.parquet.where))
+                paste0(glue("filter({input$import.parquet.where})"),NL),
+              if (length(input$import.parquet.columns)>0)
+                paste0(glue("select({..collapse(input$import.parquet.columns)})"),NL),
+              "collect()"
+            )
+          else
+          if ((type=="fst")
+              &&..isEQ(input$import.fst.filter,'where')&&..isNotEmpty(input$import.fst.expr))
             ..command2(      # --- Use 'fst' connection -------------------
               glue("fst(\"{input$import.file}\")"),NL,
               glue(".[{expr('.',TRUE)},{..collapse2(input$import.fst.columns)}]"), ..look(input$import.fst.expr),
-              if (length(input$import.columns)==1) # PB fst 0.8.8 drop=FALSE ne marche pas
+              if (length(input$import.fst.columns)==1) # PB fst 0.8.8 drop=FALSE ne marche pas
                 paste0(NL,glue("data.frame({input$import.fst.columns}=., stringsAsFactors=FALSE)"))
             )
           else

@@ -312,7 +312,12 @@
    "fst.filter.where": "celles vérifiant une condition",
    "fst.from": "Première ligne à conserver :",
    "fst.to": "Dernière ligne à conserver :",
-   "feather.where": "Restreindre aux lignes vérifiant une condition",
+   "parquet.filter": "Lire...",
+   "parquet.filter.all":   "toutes les lignes",
+   "parquet.filter.nrow":  "les n premières lignes",
+   "parquet.filter.where": "celles vérifiant une condition",
+   "parquet.nrow": "Nombre de lignes :",
+   "where": "Restreindre aux lignes vérifiant une condition",
    "funcamp.key": "Clé"
  },
  "export":{

@@ -5,6 +5,7 @@ importFrom(stats, setNames)
 
 import(dplyr)
 import(tidyr)
+importFrom(arrow, open_dataset)
 importFrom(fst, metadata_fst)
 importFrom(feather, feather_metadata)
 importFrom(haven, read_sas)
